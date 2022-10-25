@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>計算機</title>
+  <style>
+    * {
+      cursor: url(./images/4600417.png), auto
+    }
+
+    body {
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-image: url(./images/Fujiyoshida-Japan-Mount-Fuji-Chureito-pagoda-at-sunset.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    table {
+      margin: auto;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 10px solid rgb(214, 50, 104, 0.5);
+      border-radius: 10px;
+      border-spacing: 8px;
+      box-shadow: 0px 0px 5px 1px rgba(248, 14, 96, 0.5);
+      color: rgb(255, 255, 255, 0.5);
+      font-weight: bold;
+      background-image: linear-gradient(180deg, rgb(245, 215, 226), rgb(211, 17, 75));
+    }
+
+
+
+    td {
+      width: 30px;
+      height: 30px;
+      border: 5px;
+      border-radius: 5px;
+      text-align: center;
+      padding: 10px;
+      box-shadow: 0px 0px 5px 2px rgba(244, 171, 194, 0.5);
+    }
+
+    td:not(#text):hover {
+      color: rgb(89, 164, 224);
+      background-color: rgb(248, 192, 240);
+      transform: scale(1.1);
+      margin-left: 100px;
+      border: 1px;
+      box-shadow:
+        0px 0px 5px rgb(250, 0, 117),
+        0px 0px 25px rgba(250, 0, 137, 0.8),
+        0px 0px 50px rgba(250, 0, 246, 0.5),
+        0px 0px 150px rgba(237, 0, 250, 0.3);
+      cursor: url(./images/00.png), auto;
+    }
+
+
+    #text {
+      text-align: right;
+      background: rgb(235, 217, 245);
+      border-radius: 5px;
+      color: rgb(194, 80, 229);
+      font-size: x-large;
+    }
+  </style>
+</head>
+
+<body>
+  <table border="1">
+    <tr class="tr01">
+      <td colspan="4" id="text">0</td>
+    </tr>
+    <tr class="tr02">
+      <td>C</td>
+      <td>/</td>
+      <td>*</td>
+      <td>-</td>
+    </tr>
+    <tr class="tr03">
+      <td>7</td>
+      <td>8</td>
+      <td>9</td>
+      <td rowspan="2">+</td>
+    </tr>
+    <tr class="tr04">
+      <td>4</td>
+      <td>5</td>
+      <td>6</td>
+    </tr>
+    <tr class="tr05">
+      <td>1</td>
+      <td>2</td>
+      <td>3</td>
+      <td rowspan="2">=</td>
+    </tr>
+    <tr class="tr06">
+      <td colspan="2">0</td>
+      <td>.</td>
+    </tr>
+  </table>
+  <script>
+    const text = document.getElementById('text')
+    const btns = document.querySelectorAll('td:not(#text)')
+    // 設定reset用意是為了重置算式，從開始計算，否則新的數值會一直往後加在原本的結果後面
+    // 當reset = false 時，代表還在計算中，數字可以一直做運算。
+    let reset = false
+
+    for (const btn of btns) {
+      btn.onclick = () => {
+        const btnText = btn.innerText
+        if (btnText === '=') {
+          text.innerText = eval(text.innerText)
+          // 當reset = true 時，表示運算結束，下一個鍵入的數字將會是新的運算的開始。
+          reset = true
+        } else if (btnText === 'C' || btnText === 'c') {
+          text.innerText = '0'
+        } else {
+          if (text.innerText === '-' && isNaN(parseInt(btnText))) return
+          // !reset 不是改值，而是要嚴格判斷是等於 false 狀態。
+          if (text.innerText !== '0' && !reset) {
+            text.innerText += btnText
+            // 一開始為0 時不能按這三個鍵c
+          } else if (!['+', '*', '/'].includes(btnText)) {
+            text.innerText = btnText
+            reset = false
+          }
+        }
+      }
+    }
+
+    document.onkeydown = event => {
+      const btnText = event.key
+      if (btnText === 'Enter' || btnText === '=') {
+        text.innerText = eval(text.innerText)
+        reset = true
+
+      } else if (btnText === 'C' || btnText === 'c') {
+        text.innerText = '0'
+      } else {
+        if (text.innerText === '-' && isNaN(parseInt(btnText))) return
+        if (!['+', '*', '/'].includes(btnText) && !btnText.match(/[0-9.]/g)) return
+        // !reset 不是改值，而是要嚴格判斷是等於 false 狀態。
+        if (text.innerText !== '0' && !reset) {
+          text.innerText += btnText
+          // 一開始為0 時不能按這三個鍵c
+        } else if (!['+', '*', '/'].includes(btnText) || reset) {
+          text.innerText = btnText
+          reset = false
+        }
+      }
+    }
+
+
+  </script>
+</body>
+
+</html>
